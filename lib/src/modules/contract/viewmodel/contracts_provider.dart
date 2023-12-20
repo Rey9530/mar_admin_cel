@@ -100,6 +100,33 @@ class ContractsProvider extends ChangeNotifier {
     }
   }
 
+  List<MakingItem> emplmakingsCtr = [];
+  Future<bool> getMakingsContracts([load = false]) async {
+    try {
+      if (load) {
+        loading = true;
+        notifyListeners();
+      }
+      final resp = await DioConnection.get_(
+        '/markings/list/contract/${contract!.ctrCodigo}',
+        {
+          "date_start": startDateFilter.text,
+          "date_end": endDateFilter.text,
+        },
+      );
+      final response = MakingCtrResponse.fromJson(resp);
+      emplmakingsCtr = response.data;
+      return true;
+    } catch (e) {
+      return false;
+    } finally {
+      if (load) {
+        loading = false;
+        notifyListeners();
+      }
+    }
+  }
+
   loadData(uui) async {
     uuid = uui;
     await getCompanies();
@@ -153,6 +180,24 @@ class ContractsProvider extends ChangeNotifier {
     await getRegister();
     await getEmpContracts();
     await getHoursContracts(uuid ?? '');
+    employees = [];
+    if (contract == null) {
+      NavigationService.replaceTo(Flurorouter.contractsRoute);
+    }
+  }
+
+  var startDateFilter = TextEditingController();
+  var endDateFilter = TextEditingController();
+  loadMakings(uui) async {
+    var date = DateTime.now();
+
+    startDateFilter.text = "${date.day}/${date.month}/${date.year}";
+    endDateFilter.text = "${date.day}/${date.month}/${date.year}";
+
+    uuid = uui;
+    if (uuid == null) NavigationService.replaceTo(Flurorouter.contractsRoute);
+    await getRegister();
+    await getMakingsContracts();
     employees = [];
     if (contract == null) {
       NavigationService.replaceTo(Flurorouter.contractsRoute);

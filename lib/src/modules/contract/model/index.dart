@@ -6,3 +6,4 @@ export './employes.model.dart';
 export './employes_contract_model.dart';
 export './employes_contracts_dts.dart';
 export './list_hours_ctr.dart';
+export './making.model.dart';

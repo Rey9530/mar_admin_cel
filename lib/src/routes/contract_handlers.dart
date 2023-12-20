@@ -4,6 +4,7 @@ import 'package:marcacion_admin/src/modules/auth/viewmodel/provider_auth.dart';
 import 'package:marcacion_admin/src/modules/contract/view/contracts_view.dart';
 import 'package:marcacion_admin/src/modules/contract/view/employes_contracts_view.dart';
 import 'package:marcacion_admin/src/modules/contract/view/form_contracts_view.dart';
+import 'package:marcacion_admin/src/modules/contract/view/makings_contracts_view.dart';
 import 'package:marcacion_admin/src/modules/contract/view/schedules_contracts_view.dart';
 import 'package:marcacion_admin/src/modules/views.dart';
 import 'package:marcacion_admin/src/routes/router.dart';
@@ -63,6 +64,21 @@ class ContractHandlers {
       if (authProvider.authStatus == AuthStatus.authenticated) {
         String? uuid = params['uuid']?.first;
         return EmployeesContractsView(uuid: uuid);
+      } else {
+        return const LoginView();
+      }
+    },
+  );
+
+  static Handler markings = Handler(
+    handlerFunc: (context, params) {
+      final authProvider = Provider.of<AuthProvider>(context!);
+      Provider.of<SideMenuProvider>(context, listen: false)
+          .setCurrentPageUrl(Flurorouter.contractsMarkingsRoute);
+
+      if (authProvider.authStatus == AuthStatus.authenticated) {
+        String? uuid = params['uuid']?.first;
+        return MakingsContractsView(uuid: uuid);
       } else {
         return const LoginView();
       }

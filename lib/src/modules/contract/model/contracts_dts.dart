@@ -86,6 +86,25 @@ class ContractsTDS extends DataTableSource {
               ),
               IconButton(
                 onPressed: () {
+                  NavigationService.navigateTo(
+                    "/contracts/markings/${contract.ctrCodigo}",
+                  );
+                },
+                icon: Container(
+                  width: 50,
+                  height: 30,
+                  decoration: BoxDecoration(
+                    color: primary,
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: const Icon(
+                    Icons.calendar_month_outlined,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              IconButton(
+                onPressed: () {
                   final dialog = AlertDialog(
                     title: Column(
                       children: [
