@@ -134,7 +134,7 @@ class _ForNewContractsWidget extends StatelessWidget {
                     ],
                     isDark: true,
                     label: "Fecha de inicio",
-                    hinText: '00/00/0000',
+                    hinText: 'DD/MM/AA',
                     controller: provider.startDate,
                     onChange: (String valor) async {},
                     suffixIcon: InkWell(
@@ -171,7 +171,7 @@ class _ForNewContractsWidget extends StatelessWidget {
                     ],
                     isDark: true,
                     label: "Fecha de fin",
-                    hinText: '00/00/0000',
+                    hinText: 'DD/MM/AA',
                     controller: provider.endDate,
                     onChange: (String valor) async {},
                     suffixIcon: InkWell(
@@ -242,7 +242,7 @@ class _ForNewContractsWidget extends StatelessWidget {
                     child: TextFormFieldCustomWidget(
                       isDark: true,
                       label: "Inicio de prórroga",
-                      hinText: '00/00/0000',
+                      hinText: 'DD/MM/AA',
                       inputFormatters: [
                         MaskTextInputFormatter(
                           mask: '##/##/####',
@@ -279,7 +279,7 @@ class _ForNewContractsWidget extends StatelessWidget {
                     child: TextFormFieldCustomWidget(
                       isDark: true,
                       label: "Fin de prórroga",
-                      hinText: '00/00/0000',
+                      hinText: 'DD/MM/AA',
                       inputFormatters: [
                         MaskTextInputFormatter(
                           mask: '##/##/####',
