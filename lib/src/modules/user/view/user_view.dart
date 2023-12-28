@@ -102,6 +102,12 @@ class ModalChangePasswordWidget extends StatelessWidget {
     final providerUser = Provider.of<UserProvider>(context);
     return AlertDialog(
       backgroundColor: Colors.white,
+      surfaceTintColor: Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(16.0),
+        ),
+      ),
       title: Column(
         children: [
           Image.asset("assets/icons/_changepassword.png"),
@@ -110,14 +116,15 @@ class ModalChangePasswordWidget extends StatelessWidget {
             style: TextStyle(
               color: getTheme(context).primary,
               fontWeight: FontWeight.w400,
-              fontSize: 22,
+              fontSize: 24,
             ),
           ),
         ],
       ),
-      content: SizedBox(
+      content: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
         height: 450,
-        width: 400,
+        width: 340,
         child: Column(
           children: [
             const SizedBox(height: 20),
@@ -162,6 +169,8 @@ class ModalChangePasswordWidget extends StatelessWidget {
         Row(
           children: [
             BtnOutlineWidget(
+              height: 40,
+              width: 80,
               title: 'Cancelar',
               onPress: () {
                 Navigator.pop(context);
@@ -169,6 +178,7 @@ class ModalChangePasswordWidget extends StatelessWidget {
             ),
             const Spacer(),
             BtnWidget(
+              colorDisable:hinTextPassword,
               title: "Cambiar",
               width: 200,
               disable: !providerUser.isReady,

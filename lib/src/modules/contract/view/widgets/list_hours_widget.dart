@@ -74,7 +74,7 @@ class ItemHoursWidget extends StatelessWidget {
             padding: const EdgeInsets.only(left: 10, right: 10),
             color: Colors.white,
             child: Text(
-              'Horario 1',
+              'Nuevo',
               style: TextStyle(
                 color: getTheme(context).primary,
                 fontWeight: FontWeight.w600,

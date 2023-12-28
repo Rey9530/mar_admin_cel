@@ -69,7 +69,7 @@ class BodyReportsWidget extends StatelessWidget {
                   child: TextFormFieldCustomWidget(
                     isDark: true,
                     label: "Desde",
-                    hinText: '00/00/0000',
+                    hinText: 'dd/mm/AAAA',
                     inputFormatters: [
                       MaskTextInputFormatter(
                         mask: '##/##/####',
@@ -104,7 +104,7 @@ class BodyReportsWidget extends StatelessWidget {
                   child: TextFormFieldCustomWidget(
                     isDark: true,
                     label: "Hasta",
-                    hinText: '00/00/0000',
+                    hinText: 'dd/mm/AAAA',
                     inputFormatters: [
                       MaskTextInputFormatter(
                         mask: '##/##/####',

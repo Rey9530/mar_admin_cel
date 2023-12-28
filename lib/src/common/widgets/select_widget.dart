@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:marcacion_admin/src/common/const/const.dart';
 import 'package:marcacion_admin/src/common/helpers/helpers.dart';
 import 'package:marcacion_admin/src/common/models/dropdown_button_data_model.dart';
 
@@ -55,88 +56,106 @@ class SelectCompaniesWidgetState extends State<SelectCompaniesWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return DropdownButtonFormField<String>(
-      value: dropdownvalue,
-      isExpanded: true,
-      // Down Arrow Icon
-      icon: const Icon(Icons.keyboard_arrow_down),
-      borderRadius: BorderRadius.circular(4),
-      validator: widget.isRequired
-          ? (value) {
-              if (value != "0") return null;
-              return "Este campo es requerido";
-            }
-          : null,
-      decoration: InputDecoration(
-        labelText: widget.title,
-        labelStyle: TextStyle(
-          color: widget.isDisable
-              ? getTheme(context).tertiary.withOpacity(0.5)
-              : getTheme(context).primary,
-          fontWeight: FontWeight.w400,
-        ),
-        border: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: widget.isDisable
-                ? getTheme(context).tertiary.withOpacity(0.5)
-                : getTheme(context).tertiary.withOpacity(0.5),
-          ),
-          borderRadius: BorderRadius.circular(4),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(
+    return SizedBox(
+      height: 80,
+      child: DropdownButtonFormField<String>(
+        value: dropdownvalue,
+        isExpanded: true,
+        // Down Arrow Icon
+        icon: const Icon(Icons.keyboard_arrow_down),
+        borderRadius: BorderRadius.circular(4),
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        validator: widget.isRequired
+            ? (value) {
+                if (value != "0") return null;
+                return "Este campo es requerido";
+              }
+            : null,
+        decoration: InputDecoration(
+          labelText: widget.title,
+          errorStyle: const TextStyle(height: 0.4),
+          labelStyle: TextStyle(
             color: widget.isDisable
                 ? getTheme(context).tertiary.withOpacity(0.5)
                 : getTheme(context).primary,
+            fontWeight: FontWeight.w400,
           ),
-          borderRadius: BorderRadius.circular(4),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: widget.isDisable
-                ? getTheme(context).tertiary.withOpacity(0.5)
-                : getTheme(context).primary,
+
+          focusedErrorBorder: const OutlineInputBorder(
+            borderSide: BorderSide(
+              color: error,
+              width: 2,
+            ),
           ),
-          borderRadius: BorderRadius.circular(4),
-        ),
-        disabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: getTheme(context).tertiary.withOpacity(0.5),
+          errorBorder: const OutlineInputBorder(
+            borderSide: BorderSide(
+              color: error,
+              width: 2,
+            ),
           ),
-          borderRadius: BorderRadius.circular(4),
+          border: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: widget.isDisable
+                  ? getTheme(context).tertiary.withOpacity(0.5)
+                  : getTheme(context).tertiary.withOpacity(0.5),
+            ),
+            borderRadius: BorderRadius.circular(4),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: widget.isDisable
+                  ? getTheme(context).tertiary.withOpacity(0.5)
+                  : getTheme(context).primary,
+            ),
+            borderRadius: BorderRadius.circular(4),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: widget.isDisable
+                  ? getTheme(context).tertiary.withOpacity(0.5)
+                  : getTheme(context).primary,
+            ),
+            borderRadius: BorderRadius.circular(4),
+          ),
+          disabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: getTheme(context).tertiary.withOpacity(0.5),
+            ),
+            borderRadius: BorderRadius.circular(4),
+          ),
         ),
-      ),
-      // Array list of items
-      items: widget.isDisable
-          ? null
-          : items.map(
-              (DropdownButtonData item) {
-                return DropdownMenuItem<String>(
-                  value: item.id,
-                  child: Text(
-                    item.title,
-                    style: TextStyle(
-                      color: widget.isDisable
-                          ? getTheme(context).tertiary.withOpacity(0.5)
-                          : getTheme(context).primary,
+        // Array list of items
+        items: widget.isDisable
+            ? null
+            : items.map(
+                (DropdownButtonData item) {
+                  return DropdownMenuItem<String>(
+                    value: item.id,
+                    child: Text(
+                      item.title,
+                      style: TextStyle(
+                        color: widget.isDisable
+                            ? getTheme(context).tertiary.withOpacity(0.5)
+                            : getTheme(context).primary,
+                      ),
                     ),
-                  ),
-                );
-              },
-            ).toList(),
-      onChanged: (String? newValue) {
-        if (widget.onChange != null) {
-          var itemSelected =
-              items.where((element) => element.id == newValue).toList().first;
-          widget.onChange!(itemSelected);
-        }
-        if (newValue != null) {
-          setState(() {
-            dropdownvalue = newValue;
-            widget.controller.text = newValue;
-          });
-        }
-      },
+                  );
+                },
+              ).toList(),
+        onChanged: (String? newValue) {
+          if (widget.onChange != null) {
+            var itemSelected =
+                items.where((element) => element.id == newValue).toList().first;
+            widget.onChange!(itemSelected);
+          }
+          if (newValue != null) {
+            setState(() {
+              dropdownvalue = newValue;
+              widget.controller.text = newValue;
+            });
+          }
+        },
+      ),
     );
   }
 }

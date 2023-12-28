@@ -81,17 +81,21 @@ class _EmployeesFormWidgetState extends State<_EmployeesFormWidget> {
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<CompaniesProvider>(context);
+    Size size = MediaQuery.sizeOf(context);
     return Form(
       key: provider.formKey,
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Wrap(
             crossAxisAlignment: WrapCrossAlignment.start,
             direction: Axis.horizontal,
             children: [
               Container(
-                margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-                width: 600,
+                width: size.width * 0.38,
+                constraints: const BoxConstraints(minWidth: 600),
+                margin: const EdgeInsets.only(bottom: 10),
                 child: TextFormFieldCustomWidget(
                   isDark: true,
                   label: "Nombre de la empresa",
@@ -105,9 +109,11 @@ class _EmployeesFormWidgetState extends State<_EmployeesFormWidget> {
                   },
                 ),
               ),
+              const SizedBox(width: 20),
               Container(
-                margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-                width: 350,
+                width: size.width * 0.20,
+                margin: const EdgeInsets.only(bottom: 10),
+                constraints: const BoxConstraints(minWidth: 350),
                 child: TextFormFieldCustomWidget(
                   isDark: true,
                   label: "Dirección de la empresa",
@@ -121,9 +127,11 @@ class _EmployeesFormWidgetState extends State<_EmployeesFormWidget> {
                   },
                 ),
               ),
+              const SizedBox(width: 20),
               Container(
-                margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-                width: 350,
+                width: size.width * 0.20,
+                margin: const EdgeInsets.only(bottom: 10),
+                constraints: const BoxConstraints(minWidth: 350),
                 child: TextFormFieldCustomWidget(
                   isDark: true,
                   label: "Persona de contacto",
@@ -137,9 +145,11 @@ class _EmployeesFormWidgetState extends State<_EmployeesFormWidget> {
                   },
                 ),
               ),
+              const SizedBox(width: 20),
               Container(
-                margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-                width: 600,
+                width: size.width * 0.38,
+                margin: const EdgeInsets.only(bottom: 10),
+                constraints: const BoxConstraints(minWidth: 600),
                 child: TextFormFieldCustomWidget(
                   isDark: true,
                   label: "Correo electrónico",
@@ -154,9 +164,11 @@ class _EmployeesFormWidgetState extends State<_EmployeesFormWidget> {
                   },
                 ),
               ),
+              const SizedBox(width: 20),
               Container(
-                margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-                width: 350,
+                width: size.width * 0.20,
+                margin: const EdgeInsets.only(bottom: 10),
+                constraints: const BoxConstraints(minWidth: 350),
                 child: TextFormFieldCustomWidget(
                   isDark: true,
                   label: "Teléfono de contacto",
@@ -177,24 +189,21 @@ class _EmployeesFormWidgetState extends State<_EmployeesFormWidget> {
                   },
                 ),
               ),
-              Container(
-                margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-                width: 350,
-                child: BtnWidget(
-                  title: 'Guardar',
-                  disable: !(provider.isReady),
-                  loading: provider.loading,
-                  onPress: () async {
-                    if (provider.formKey.currentState?.validate() ?? false) {
-                      await provider.postCompanies();
-                      provider.formKey.currentState?.reset();
-                    }
-                  },
-                ),
+              const SizedBox(width: 20),
+              BtnWidget(
+                width: size.width * 0.10,
+                title: 'Guardar',
+                disable: !(provider.isReady),
+                loading: provider.loading,
+                onPress: () async {
+                  if (provider.formKey.currentState?.validate() ?? false) {
+                    await provider.postCompanies();
+                    provider.formKey.currentState?.reset();
+                  }
+                },
               ),
             ],
           ),
-          const SizedBox(height: 50)
         ],
       ),
     );

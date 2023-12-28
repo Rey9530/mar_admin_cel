@@ -372,12 +372,10 @@ class ContractsProvider extends ChangeNotifier {
         "marca_ctr_empre": company.text,
       };
       if (uuid != null) {
-        await DioConnection.put_('/contracts/$uuid', data);
-        NotificationsService.showSnackbarSuccess("Contrato Actualizado");
-        NavigationService.goBack();
+        await DioConnection.put_('/contracts/$uuid', data); 
+        NavigationService.navigateTo("/contracts/schedules/$uuid");
       } else {
-        var res = await DioConnection.post_('/contracts', data);
-        NotificationsService.showSnackbarSuccess("Contrato creado");
+        var res = await DioConnection.post_('/contracts', data); 
         NavigationService.navigateTo(
           "/contracts/schedules/${res["data"]["ctr_codigo"]}",
         );

@@ -74,123 +74,127 @@ class _TextFormFieldCustomWidgetState extends State<TextFormFieldCustomWidget> {
   bool isError = false;
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      textAlign: widget.textAlign,
-      readOnly: widget.readOnly,
-      autofocus: widget.autoFocus,
-      inputFormatters: widget.inputFormatters,
-      onFieldSubmitted: widget.onFieldSubmitted,
-      cursorColor: widget.isDark ? getTheme(context).primary : Colors.white,
-      controller: widget.controller,
-      obscureText: (widget.isPassword && showText),
-      focusNode: _focus,
-      autovalidateMode: AutovalidateMode.onUserInteraction,
-      validator: (String? valor) {
-        if (valor == null || valor.isEmpty) {
-          return "Este campo es requerido ";
-        }
-        if (widget.validations != null && widget.validations!.isNotEmpty) {
-          for (var i = 0; i < widget.validations!.length; i++) {
-            var function = widget.validations![i];
-            var respValid = function(valor);
-            if (respValid != null) {
-              return respValid;
+    return SizedBox(
+      height: 80,
+      child: TextFormField(
+        textAlign: widget.textAlign,
+        readOnly: widget.readOnly,
+        autofocus: widget.autoFocus,
+        inputFormatters: widget.inputFormatters,
+        onFieldSubmitted: widget.onFieldSubmitted,
+        cursorColor: widget.isDark ? getTheme(context).primary : Colors.white,
+        controller: widget.controller,
+        obscureText: (widget.isPassword && showText),
+        focusNode: _focus,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        validator: (String? valor) {
+          if (valor == null || valor.isEmpty) {
+            return "Este campo es requerido ";
+          }
+          if (widget.validations != null && widget.validations!.isNotEmpty) {
+            for (var i = 0; i < widget.validations!.length; i++) {
+              var function = widget.validations![i];
+              var respValid = function(valor);
+              if (respValid != null) {
+                return respValid;
+              }
             }
           }
-        }
-        return null;
-      },
-      onChanged: (valor) {
-        setState(() {
-          isError = (valor.isEmpty);
-        });
-        if (widget.onChange != null) {
-          widget.onChange!(valor);
-        }
-      },
-      style: TextStyle(
-        color: widget.isDark ? getTheme(context).primary : Colors.white,
-        fontWeight: widget.fontWeight,
-        fontSize: widget.fontSize,
-      ),
-      keyboardType: TextInputType.number,
-      decoration: InputDecoration(
-        contentPadding: widget.contentPadding,
-        floatingLabelBehavior: widget.floatingLabelBehavior,
-        suffixIcon: widget.isPassword
-            ? GestureDetector(
-                onTap: () {
-                  setState(() {
-                    showText = !showText;
-                  });
-                },
-                child: showText
-                    ? Icon(
-                        Icons.visibility_off,
-                        color: (_focus.hasFocus ||
-                                widget.controller.text.isNotEmpty)
-                            ? widget.isDark
-                                ? getTheme(context).primary
-                                : Colors.white
-                            : (widget.isDark
-                                    ? getTheme(context).primary
-                                    : Colors.white)
-                                .withOpacity(0.6),
-                      )
-                    : Icon(
-                        Icons.visibility,
-                        color: (_focus.hasFocus ||
-                                widget.controller.text.isNotEmpty)
-                            ? widget.isDark
-                                ? getTheme(context).primary
-                                : Colors.white
-                            : (widget.isDark
-                                    ? getTheme(context).primary
-                                    : Colors.white)
-                                .withOpacity(0.6),
-                      ),
-              )
-            : widget.suffixIcon,
-        labelText: widget.label,
-        hintText: widget.hinText,
-        hintStyle: const TextStyle(color: hinTextPassword),
-        border: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: widget.isDark ? getTheme(context).primary : Colors.white,
-            width: 4,
-          ),
+          return null;
+        },
+        onChanged: (valor) {
+          setState(() {
+            isError = (valor.isEmpty);
+          });
+          if (widget.onChange != null) {
+            widget.onChange!(valor);
+          }
+        },
+        style: TextStyle(
+          color: widget.isDark ? getTheme(context).primary : Colors.white,
+          fontWeight: widget.fontWeight,
+          fontSize: widget.fontSize,
         ),
-        focusedErrorBorder: const OutlineInputBorder(
-          borderSide: BorderSide(
-            color: error,
-            width: 2,
+        keyboardType: TextInputType.number,
+        decoration: InputDecoration(
+          contentPadding: widget.contentPadding,
+          floatingLabelBehavior: widget.floatingLabelBehavior,
+          suffixIcon: widget.isPassword
+              ? GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      showText = !showText;
+                    });
+                  },
+                  child: showText
+                      ? Icon(
+                          Icons.visibility_off,
+                          color: (_focus.hasFocus ||
+                                  widget.controller.text.isNotEmpty)
+                              ? widget.isDark
+                                  ? getTheme(context).primary
+                                  : Colors.white
+                              : (widget.isDark
+                                      ? getTheme(context).primary
+                                      : Colors.white)
+                                  .withOpacity(0.6),
+                        )
+                      : Icon(
+                          Icons.visibility,
+                          color: (_focus.hasFocus ||
+                                  widget.controller.text.isNotEmpty)
+                              ? widget.isDark
+                                  ? getTheme(context).primary
+                                  : Colors.white
+                              : (widget.isDark
+                                      ? getTheme(context).primary
+                                      : Colors.white)
+                                  .withOpacity(0.6),
+                        ),
+                )
+              : widget.suffixIcon,
+          labelText: widget.label,
+          hintText: widget.hinText,
+          hintStyle: const TextStyle(color: hinTextPassword),
+          border: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: widget.isDark ? getTheme(context).primary : Colors.white,
+              width: 4,
+            ),
           ),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: widget.isDark ? getTheme(context).primary : Colors.white,
-            width: 1,
+          errorStyle: const TextStyle(height: 0.4),
+          focusedErrorBorder: const OutlineInputBorder(
+            borderSide: BorderSide(
+              color: error,
+              width: 2,
+            ),
           ),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: widget.isDark ? getTheme(context).primary : Colors.white,
-            width: 2,
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: widget.isDark ? getTheme(context).primary : Colors.white,
+              width: 1,
+            ),
           ),
-        ),
-        errorBorder: const OutlineInputBorder(
-          borderSide: BorderSide(
-            color: error,
-            width: 2,
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: widget.isDark ? getTheme(context).primary : Colors.white,
+              width: 2,
+            ),
           ),
-        ),
-        labelStyle: TextStyle(
-          color: (_focus.hasFocus || widget.controller.text.isNotEmpty)
-              ? widget.isDark
-                  ? getTheme(context).primary
-                  : Colors.white
-              : (widget.isDark ? getTheme(context).primary : Colors.white),
-          fontWeight: FontWeight.w600,
+          errorBorder: const OutlineInputBorder(
+            borderSide: BorderSide(
+              color: error,
+              width: 2,
+            ),
+          ),
+          labelStyle: TextStyle(
+            color: (_focus.hasFocus || widget.controller.text.isNotEmpty)
+                ? widget.isDark
+                    ? getTheme(context).primary
+                    : Colors.white
+                : (widget.isDark ? getTheme(context).primary : Colors.white),
+            fontWeight: FontWeight.w600,
+          ),
         ),
       ),
     );

@@ -209,7 +209,7 @@ class CardUserCustomerWidget extends StatelessWidget {
           const SizedBox(height: 20),
           Container(
             width: double.infinity,
-            height: 150,
+            height: 140,
             decoration: BoxDecoration(
               color: getTheme(context).primary,
               borderRadius: BorderRadius.circular(16),
@@ -231,6 +231,7 @@ class CardUserCustomerWidget extends StatelessWidget {
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(16),
                   ),
+                  height: 55,
                   child: SelectCompaniesWidget(
                     controller: TextEditingController(),
                     title: '',

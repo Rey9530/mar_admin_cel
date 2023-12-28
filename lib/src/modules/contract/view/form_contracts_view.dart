@@ -85,11 +85,28 @@ class _ForNewContractsWidget extends StatelessWidget {
           SizedBox(
             width: 1100,
             child: Wrap(
-              alignment: WrapAlignment.center,
+              alignment: WrapAlignment.start,
               children: [
                 Container(
-                  margin:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                  alignment: Alignment.centerRight,
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: 30,
+                    vertical: 10,
+                  ),
+                  width: double.infinity,
+                  child: Text(
+                    "Paso 1 de 3",
+                    style: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      color: getTheme(context).primary,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 10,
+                  ),
                   width: 400,
                   child: TextFormFieldCustomWidget(
                     isDark: true,
@@ -134,7 +151,7 @@ class _ForNewContractsWidget extends StatelessWidget {
                     ],
                     isDark: true,
                     label: "Fecha de inicio",
-                    hinText: '00/00/0000',
+                    hinText: 'dd/mm/AAAA',
                     controller: provider.startDate,
                     onChange: (String valor) async {},
                     suffixIcon: InkWell(
@@ -171,7 +188,7 @@ class _ForNewContractsWidget extends StatelessWidget {
                     ],
                     isDark: true,
                     label: "Fecha de fin",
-                    hinText: '00/00/0000',
+                    hinText: 'dd/mm/AAAA',
                     controller: provider.endDate,
                     onChange: (String valor) async {},
                     suffixIcon: InkWell(
@@ -194,7 +211,7 @@ class _ForNewContractsWidget extends StatelessWidget {
                 Container(
                   margin:
                       const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                  width: 350,
+                  width: 400,
                   child: SelectCompaniesWidget(
                     controller: provider.company,
                     title: 'Empresa',
@@ -218,7 +235,7 @@ class _ForNewContractsWidget extends StatelessWidget {
                     horizontal: 10,
                     vertical: 10,
                   ),
-                  width: 170,
+                  width: 100,
                   child: TextFormFieldCustomWidget(
                     isDark: true,
                     label: "Horas extras",
@@ -226,23 +243,22 @@ class _ForNewContractsWidget extends StatelessWidget {
                     controller: provider.extraHours,
                   ),
                 ),
-                Container(
-                  margin: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 10,
-                  ),
-                  width: 160,
-                  child: const SwitchListTileExample(),
+                const SizedBox(
+                  width: 100,
+                  child: ExtendableSwitchWidget(),
                 ),
+                if (!provider.isExtendable) const SizedBox(width: 440),
                 if (provider.isExtendable)
                   Container(
                     margin: const EdgeInsets.symmetric(
-                        horizontal: 10, vertical: 10),
-                    width: 150,
+                      horizontal: 10,
+                      vertical: 10,
+                    ),
+                    width: 200,
                     child: TextFormFieldCustomWidget(
                       isDark: true,
                       label: "Inicio de prórroga",
-                      hinText: '00/00/0000',
+                      hinText: 'dd/mm/AAAA',
                       inputFormatters: [
                         MaskTextInputFormatter(
                           mask: '##/##/####',
@@ -275,11 +291,11 @@ class _ForNewContractsWidget extends StatelessWidget {
                   Container(
                     margin: const EdgeInsets.symmetric(
                         horizontal: 10, vertical: 10),
-                    width: 150,
+                    width: 200,
                     child: TextFormFieldCustomWidget(
                       isDark: true,
                       label: "Fin de prórroga",
-                      hinText: '00/00/0000',
+                      hinText: 'dd/mm/AAAA',
                       inputFormatters: [
                         MaskTextInputFormatter(
                           mask: '##/##/####',
@@ -307,12 +323,10 @@ class _ForNewContractsWidget extends StatelessWidget {
                       ),
                     ),
                   ),
-                if (!provider.isExtendable)
-                  const SizedBox(
-                    width: 340,
-                  ),
                 Container(
                   margin: const EdgeInsets.only(top: 30),
+                  width: double.infinity,
+                  alignment: Alignment.center,
                   child: BtnWidget(
                     width: 200,
                     height: 60,
@@ -335,23 +349,30 @@ class _ForNewContractsWidget extends StatelessWidget {
   }
 }
 
-class SwitchListTileExample extends StatefulWidget {
-  const SwitchListTileExample({super.key});
+class ExtendableSwitchWidget extends StatefulWidget {
+  const ExtendableSwitchWidget({super.key});
 
   @override
-  State<SwitchListTileExample> createState() => _SwitchListTileExampleState();
+  State<ExtendableSwitchWidget> createState() => _ExtendableSwitchWidgetState();
 }
 
-class _SwitchListTileExampleState extends State<SwitchListTileExample> {
+class _ExtendableSwitchWidgetState extends State<ExtendableSwitchWidget> {
   @override
   Widget build(BuildContext context) {
     var provider = Provider.of<ContractsProvider>(context, listen: false);
     return Container(
-      alignment: Alignment.center,
-      height: 55,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+      alignment: Alignment.topLeft,
+      height: 60,
+      child: Column(
         children: [
+          Text(
+            "Prorrogable",
+            style: TextStyle(
+              color: getTheme(context).primary,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          // const SizedBox(height: 10),
           Switch(
             activeColor: Colors.white,
             inactiveThumbColor: getTheme(context).primary,
@@ -366,14 +387,6 @@ class _SwitchListTileExampleState extends State<SwitchListTileExample> {
               });
             },
           ),
-          const SizedBox(width: 10),
-          Text(
-            "Prorrogable",
-            style: TextStyle(
-              color: getTheme(context).primary,
-              fontWeight: FontWeight.w600,
-            ),
-          )
         ],
       ),
     );

@@ -165,7 +165,7 @@ class _FormewEmployeWidget extends StatelessWidget {
                     ],
                     isDark: true,
                     label: "Fecha de nacimiento",
-                    hinText: '00/00/0000',
+                    hinText: 'dd/mm/AAAA',
                     controller: provider.employeeBirthDate,
                     onChange: (String valor) async {
                       if (valor.length < 10) return;
@@ -292,7 +292,7 @@ class _FormewEmployeWidget extends StatelessWidget {
                   child: TextFormFieldCustomWidget(
                     isDark: true,
                     label: "Fecha de inicio",
-                    hinText: '00/00/0000',
+                    hinText: 'dd/mm/AAAA',
                     validations: const [
                       validationIsDate,
                     ],
@@ -332,7 +332,7 @@ class _FormewEmployeWidget extends StatelessWidget {
                   child: TextFormFieldCustomWidget(
                     isDark: true,
                     label: "Fecha de fin",
-                    hinText: '00/00/0000',
+                    hinText: 'dd/mm/AAAA',
                     validations: const [
                       validationIsDate,
                     ],

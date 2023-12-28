@@ -74,7 +74,7 @@ class MarHdeDetailHo {
   factory MarHdeDetailHo.fromJson(Map<String, dynamic> json) => MarHdeDetailHo(
         hdeCodigo: json["hde_codigo"],
         hdeCodhor: json["hde_codhor"],
-        horCodDay: json["hor_coddia"],
+        horCodDay: json["hde_coddia"],
         hdeStart1: json["hde_inicio_1"],
         hdeFin1: json["hde_fin_1"],
         hdeStart2: json["hde_inicio_2"],
@@ -85,7 +85,7 @@ class MarHdeDetailHo {
   Map<String, dynamic> toJson() => {
         "hde_codigo": hdeCodigo,
         "hde_codhor": hdeCodhor,
-        "hor_coddia": horCodDay,
+        "hde_coddia": horCodDay,
         "hde_inicio_1": hdeStart1,
         "hde_fin_1": hdeFin1,
         "hde_inicio_2": hdeStart2,
