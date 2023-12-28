@@ -178,8 +178,8 @@ class _EmployeesFormWidgetState extends State<_EmployeesFormWidget> {
                   ],
                   inputFormatters: [
                     MaskTextInputFormatter(
-                      mask: '+503 I### ####',
-                      filter: {"#": RegExp(r'[0-9]'), "I": RegExp(r'[2|6|7]')},
+                      mask: '+################',
+                      filter: {"#": RegExp(r'[0-9]')},
                       type: MaskAutoCompletionType.lazy,
                     ),
                   ],

@@ -127,6 +127,26 @@ class ContractsProvider extends ChangeNotifier {
     }
   }
 
+  //TODO: TERMINAR
+  Future<bool> generateExcelMakingsContracts() async {
+    try {
+      // var dir = await getApplicationDocumentsDirectory();
+      // await dio.download("http://tu-api.com/excel/download", savePath);
+      var data = await DioConnection.get_(
+        '/markings/excel/contract/${contract!.ctrCodigo}',
+        {
+          "date_start": startDateFilter.text,
+          "date_end": endDateFilter.text,
+        },
+      );
+      print(data);
+      return true;
+    } catch (e) {
+      print(e.toString());
+      return false;
+    }
+  }
+
   loadData(uui) async {
     uuid = uui;
     await getCompanies();

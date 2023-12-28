@@ -59,7 +59,7 @@ class MakingsBodyWidget extends StatelessWidget {
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 40),
             child: Text(
-              "Has una búsqueda de los empleados a añadir a este contrato.",
+              "Has una búsqueda de los empleados que han marcado.",
               style: TextStyle(
                 fontWeight: FontWeight.w400,
                 fontSize: 18,
@@ -278,6 +278,16 @@ class FiltersWidget extends StatelessWidget {
             await provider.getMakingsContracts(true);
           },
         ),
+        // BtnWidget(
+        //   width: 200,
+        //   height: 60,
+        //   loading: provider.loading,
+        //   title: "Imprimir",
+        //   onPress: () async {
+        //     // provider.saveEmploye();
+        //     await provider.generateExcelMakingsContracts();
+        //   },
+        // ),
       ],
     );
   }
