@@ -1,3 +1,6 @@
+// ignore: avoid_web_libraries_in_flutter
+import 'dart:html' as html;
+
 import 'package:flutter/material.dart';
 import 'package:marcacion_admin/src/common/services/services.dart';
 import 'package:marcacion_admin/src/common/helpers/helpers.dart';
@@ -22,6 +25,17 @@ class ContractsProvider extends ChangeNotifier {
   bool isReady = false;
   bool loading = false;
   int total = 0;
+
+  ContractsProvider() {
+    var date = DateTime.now();
+    var monthStart = date.month > 9 ? date.month : "0${date.month}";
+    var dayStart = date.day > 9 ? date.day : "0${date.day}";
+    startDateFilter.text = "$dayStart/$monthStart/${date.year}";
+
+    var monthEnd = date.month > 9 ? date.month : "0${date.month}";
+    var dayEnd = date.day > 9 ? date.day : "0${date.day}";
+    endDateFilter.text = "$dayEnd/$monthEnd/${date.year}";
+  }
 
   changeIsExtendable(valor) {
     isExtendable = valor;
@@ -127,23 +141,39 @@ class ContractsProvider extends ChangeNotifier {
     }
   }
 
-  //TODO: TERMINAR
   Future<bool> generateExcelMakingsContracts() async {
     try {
+      loading = true;
+      notifyListeners();
       // var dir = await getApplicationDocumentsDirectory();
       // await dio.download("http://tu-api.com/excel/download", savePath);
-      var data = await DioConnection.get_(
-        '/markings/excel/contract/${contract!.ctrCodigo}',
+      var data = await DioConnection.getExcel(
+        '/markings/excel/contract/${companyFilter.text}',
         {
           "date_start": startDateFilter.text,
           "date_end": endDateFilter.text,
         },
       );
-      print(data);
+
+      final blob = html.Blob(
+        [data],
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      );
+      final url = html.Url.createObjectUrlFromBlob(blob);
+      var dateTime = DateTime.now().millisecondsSinceEpoch;
+      html.AnchorElement(href: url)
+        ..setAttribute('download', 'asistencia_$dateTime.xlsx')
+        ..click();
+
+      // Limpiar
+      html.Url.revokeObjectUrl(url);
+
       return true;
     } catch (e) {
-      print(e.toString());
       return false;
+    } finally {
+      loading = false;
+      notifyListeners();
     }
   }
 
@@ -208,12 +238,8 @@ class ContractsProvider extends ChangeNotifier {
 
   var startDateFilter = TextEditingController();
   var endDateFilter = TextEditingController();
+  var companyFilter = TextEditingController();
   loadMakings(uui) async {
-    var date = DateTime.now();
-
-    startDateFilter.text = "${date.day}/${date.month}/${date.year}";
-    endDateFilter.text = "${date.day}/${date.month}/${date.year}";
-
     uuid = uui;
     if (uuid == null) NavigationService.replaceTo(Flurorouter.contractsRoute);
     await getRegister();
@@ -392,10 +418,10 @@ class ContractsProvider extends ChangeNotifier {
         "marca_ctr_empre": company.text,
       };
       if (uuid != null) {
-        await DioConnection.put_('/contracts/$uuid', data); 
+        await DioConnection.put_('/contracts/$uuid', data);
         NavigationService.navigateTo("/contracts/schedules/$uuid");
       } else {
-        var res = await DioConnection.post_('/contracts', data); 
+        var res = await DioConnection.post_('/contracts', data);
         NavigationService.navigateTo(
           "/contracts/schedules/${res["data"]["ctr_codigo"]}",
         );

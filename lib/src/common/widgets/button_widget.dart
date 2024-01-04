@@ -10,7 +10,10 @@ class BtnWidget extends StatelessWidget {
     required this.onPress,
     this.disable = false,
     this.loading = false,
+    this.colorDisable,
   });
+
+  final Color? colorDisable;
   final double? width;
   final bool disable;
   final bool loading;
@@ -26,7 +29,7 @@ class BtnWidget extends StatelessWidget {
       height: height,
       child: TextButton(
         style: TextButton.styleFrom(
-          backgroundColor: disable ? disableButom : primary,
+          backgroundColor: disable ? colorDisable ?? disableButom : primary,
           padding: const EdgeInsets.symmetric(horizontal: 20),
         ),
         onPressed: () {
@@ -41,7 +44,11 @@ class BtnWidget extends StatelessWidget {
               Text(
                 title,
                 style: TextStyle(
-                  color: disable ? primario.withOpacity(0.9) : Colors.white,
+                  color: disable
+                      ? colorDisable != null
+                          ? Colors.white
+                          : primario.withOpacity(0.9)
+                      : Colors.white,
                   fontWeight: FontWeight.w600,
                 ),
               ),

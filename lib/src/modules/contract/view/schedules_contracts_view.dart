@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:marcacion_admin/src/common/helpers/helpers.dart';
 import 'package:marcacion_admin/src/common/services/services.dart';
 import 'package:marcacion_admin/src/modules/contract/view/widgets/edit_list_hours_widget.dart';
 import 'package:marcacion_admin/src/modules/contract/view/widgets/list_hours_widget.dart';
@@ -64,10 +65,27 @@ class SchedulesBodyWidget extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 50),
-          const ListHoursWidgets(),
+          // Container(
+          //   color: Colors.yellow,
+          //   width: 975,
+          //   child: Container(
+          //     width: 200,
+          //     alignment: Alignment.centerRight,
+          //     margin: const EdgeInsets.symmetric(horizontal: 30),
+          //     color: Colors.red,
+          //     child: Text(
+          //       "Paso 2 de 3",
+          //       style: TextStyle(
+          //         fontWeight: FontWeight.w700,
+          //         color: getTheme(context).primary,
+          //       ),
+          //     ),
+          //   ),
+          // ),
           const SizedBox(height: 50),
           for (var schedule in provider.schedules)
             EditListHoursWidgets(schedule: schedule),
+          const ListHoursWidgets(),
         ],
       ),
     );

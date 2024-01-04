@@ -55,6 +55,56 @@ class DioConnection {
     }
   }
 
+  static Future getExcel(String endpoint,
+      [Map<String, dynamic>? queryParameters]) async {
+    try {
+      Response response = await _dio.get(
+        endpoint,
+        queryParameters: queryParameters,
+        options: Options(
+          responseType: ResponseType.bytes,
+          followRedirects: false,
+          validateStatus: (status) {
+            return status! < 500;
+          },
+        ),
+      );
+      if (response.statusCode == 200) {
+        return response.data;
+      } else {
+        throw Exception('Ocurrió un error en la generacion del documento');
+      }
+    } on DioException catch (e) {
+      // The request was made and the server responded with a status code
+      // that falls out of the range of 2xx and is also not 304.
+      ErrorResponse msg;
+      if (e.response != null) {
+        if (e.response?.data != null) {
+          msg = ErrorResponse.fromJson(e.response?.data);
+          NotificationsService.showSnackbarError(msg.message);
+        } else {
+          msg = ErrorResponse(
+            time: DateTime.now(),
+            path: endpoint,
+            data: "Error al generar la peticion",
+            message: '',
+            status: 500,
+          );
+        }
+      } else {
+        msg = ErrorResponse(
+          time: DateTime.now(),
+          path: endpoint,
+          data: "Error al generar la peticion",
+          message: '',
+          status: 500,
+        );
+      }
+      NotificationsService.showSnackbarError(msg.message);
+      return msg;
+    }
+  }
+
   static Future post_(String endpoint, dynamic data) async {
     // final formData = FormData.fromMap(data);
 

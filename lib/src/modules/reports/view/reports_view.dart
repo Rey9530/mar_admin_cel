@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:marcacion_admin/src/common/models/dropdown_button_data_model.dart';
 import 'package:marcacion_admin/src/common/widgets/widgets.dart';
+import 'package:marcacion_admin/src/modules/contract/viewmodel/contracts_provider.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:provider/provider.dart';
 
 class ReportsView extends StatelessWidget {
   const ReportsView({super.key});
@@ -31,6 +34,7 @@ class BodyReportsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.sizeOf(context);
+    var provider = Provider.of<ContractsProvider>(context, listen: false);
     return Container(
       width: size.width,
       height: size.height * 0.85,
@@ -46,17 +50,9 @@ class BodyReportsWidget extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 30),
-          SizedBox(
+          const SizedBox(
             width: 400,
-            child: SelectCompaniesWidget(
-              controller: TextEditingController(),
-              title: 'Código de contrato',
-              items: [
-                DropdownButtonData(id: '1', title: 'Limpieza'),
-                DropdownButtonData(id: '2', title: 'Mantenimiento'),
-                DropdownButtonData(id: '3', title: 'Vigilancia'),
-              ],
-            ),
+            child: _ListCompaniesWidget(),
           ),
           const SizedBox(height: 20),
           SizedBox(
@@ -77,22 +73,23 @@ class BodyReportsWidget extends StatelessWidget {
                         type: MaskAutoCompletionType.lazy,
                       ),
                     ],
-                    controller: TextEditingController(),
+                    controller: provider.startDateFilter,
                     onChange: (valor) async {},
                     suffixIcon: InkWell(
                       onTap: () async {
                         var data = await showDatePicker(
                           context: context,
-                          firstDate: DateTime(DateTime.now().year),
+                          firstDate: DateTime(DateTime.now().year-3),
                           lastDate: DateTime(DateTime.now().year, 12, 31),
                           // barrierDismissible: false,
                           initialEntryMode: DatePickerEntryMode.calendarOnly,
                           locale: const Locale('es', 'ES'),
                         );
                         if (data != null) {
-                          // String onlydate =
-                          //     DateFormat("dd/MM/yyyy").format(data);
-                          // provider.employeDateStart.text = onlydate;
+                          String onlydate =
+                              DateFormat("dd/MM/yyyy").format(data);
+                          provider.startDateFilter.text = onlydate;
+                          provider.notifyListens();
                         }
                       },
                       child: Image.asset("assets/icons/calendar_primary.png"),
@@ -112,7 +109,7 @@ class BodyReportsWidget extends StatelessWidget {
                         type: MaskAutoCompletionType.lazy,
                       ),
                     ],
-                    controller: TextEditingController(),
+                    controller: provider.endDateFilter,
                     onChange: (valor) async {},
                     suffixIcon: InkWell(
                       onTap: () async {
@@ -125,9 +122,10 @@ class BodyReportsWidget extends StatelessWidget {
                           locale: const Locale('es', 'ES'),
                         );
                         if (data != null) {
-                          // String onlydate =
-                          //     DateFormat("dd/MM/yyyy").format(data);
-                          // provider.employeDateStart.text = onlydate;
+                          String onlydate =
+                              DateFormat("dd/MM/yyyy").format(data);
+                          provider.endDateFilter.text = onlydate;
+                          provider.notifyListens();
                         }
                       },
                       child: Image.asset("assets/icons/calendar_primary.png"),
@@ -141,14 +139,74 @@ class BodyReportsWidget extends StatelessWidget {
           Container(
             width: 400,
             alignment: Alignment.center,
-            child: BtnWidget(
-              disable: true,
-              width: 200,
-              title: "Generar reporte",
-              onPress: () {},
-            ),
+            child: const BtnGenerateWidget(),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class BtnGenerateWidget extends StatelessWidget {
+  const BtnGenerateWidget({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    var provider = Provider.of<ContractsProvider>(context);
+    return BtnWidget(
+      disable: (provider.startDateFilter.text.length < 10 ||
+          provider.endDateFilter.text.length < 10 ||
+          provider.companyFilter.text.length < 10),
+      width: 200,
+      loading: provider.loading,
+      title: "Generar reporte",
+      onPress: () async {
+        await provider.generateExcelMakingsContracts();
+      },
+    );
+  }
+}
+
+class _ListCompaniesWidget extends StatelessWidget {
+  const _ListCompaniesWidget();
+
+  @override
+  Widget build(BuildContext context) {
+    var provider = Provider.of<ContractsProvider>(context, listen: false);
+    return SizedBox(
+      width: 500,
+      child: FutureBuilder(
+        future: provider.getContracts(),
+        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const SizedBox(
+              width: 50,
+              height: 50,
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
+            );
+          }
+          return SelectCompaniesWidget(
+            controller: provider.companyFilter,
+            title: 'Lista de contratos',
+            onChange: (val) {
+              provider.notifyListens();
+            },
+            textSelected: 'Seleccione una opcion por favor',
+            items: [
+              if (snapshot.data != null)
+                ...provider.contracts.map(
+                  (e) => DropdownButtonData(
+                    id: e.ctrCodigo,
+                    title: e.ctrName,
+                  ),
+                )
+            ],
+          );
+        },
       ),
     );
   }

@@ -193,7 +193,7 @@ class FiltersWidget extends StatelessWidget {
     return Row(
       children: [
         Container(
-          margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          margin: const EdgeInsets.symmetric(horizontal: 10 ),
           width: 200,
           child: TextFormFieldCustomWidget(
             inputFormatters: [
@@ -232,7 +232,7 @@ class FiltersWidget extends StatelessWidget {
           ),
         ),
         Container(
-          margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          margin: const EdgeInsets.symmetric(horizontal: 10),
           width: 200,
           child: TextFormFieldCustomWidget(
             inputFormatters: [
@@ -277,17 +277,7 @@ class FiltersWidget extends StatelessWidget {
             // provider.saveEmploye();
             await provider.getMakingsContracts(true);
           },
-        ),
-        // BtnWidget(
-        //   width: 200,
-        //   height: 60,
-        //   loading: provider.loading,
-        //   title: "Imprimir",
-        //   onPress: () async {
-        //     // provider.saveEmploye();
-        //     await provider.generateExcelMakingsContracts();
-        //   },
-        // ),
+        ), 
       ],
     );
   }
