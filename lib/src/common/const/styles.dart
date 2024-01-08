@@ -33,6 +33,9 @@ const colorContainers = Color(0XFFF1F2F2);
 
 const disabledIcons = Color(0XFFD2D2D2);
 
+
+const colortext = Color(0XFF6F6F6F);
+
 ///
 const infoBackground = Color(0XFF3C4E65);
 const userWidgetBackground = Color(0XFFF2F2F2);
