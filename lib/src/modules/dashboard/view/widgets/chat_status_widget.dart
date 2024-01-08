@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:marcacion_admin/src/common/const/const.dart';
+import 'package:marcacion_admin/src/modules/dashboard/viewmodel/dashboard_provider.dart';
+import 'package:provider/provider.dart';
 
 class ChartStatusWidget extends StatelessWidget {
   const ChartStatusWidget({super.key});
@@ -37,26 +39,39 @@ class _ListaTipesWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
+    var provDash = Provider.of<DashboardProvider>(context);
+    return Padding(
       padding: EdgeInsets.only(top: 20),
       child: Column(
         children: [
-          ListItemTipeWidget(
-            color: primary,
-            title: 'Fijos',
-            cant: '182',
+          ...provDash.contrationsChart.map(
+            (i) => ListItemTipeWidget(
+              title: i.nombre,
+              cant: i.cantidad.toString(),
+              color: i.nombre == 'Fijo'
+                  ? primary
+                  : i.nombre == 'Reemplazo'
+                      ? success
+                      : neutral,
+              isDottet: i.nombre == 'Apoyo',
+            ),
           ),
-          ListItemTipeWidget(
-            color: success,
-            title: 'Reemplazo',
-            cant: '18',
-            isDottet: true,
-          ),
-          ListItemTipeWidget(
-            color: neutral,
-            title: 'Apoyo',
-            cant: '50',
-          ),
+          // ListItemTipeWidget(
+          //   color: primary,
+          //   title: 'Fijos',
+          //   cant: '182',
+          // ),
+          // ListItemTipeWidget(
+          //   color: success,
+          //   title: 'Reemplazo',
+          //   cant: '18',
+          //   isDottet: true,
+          // ),
+          // ListItemTipeWidget(
+          //   color: neutral,
+          //   title: 'Apoyo',
+          //   cant: '50',
+          // ),
         ],
       ),
     );
@@ -165,24 +180,42 @@ class ContainerDataWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var provDash = Provider.of<DashboardProvider>(context);
     double widthMax = 568.00;
     return Row(
       children: [
-        Container(
-          width: widthMax * 0.5,
-          height: 49,
-          color: primary,
+        // for (var i in provDash.contrationsChart)
+        //   Container(
+        //     width: (i.cantidad / provDash.totalContration) * widthMax,
+        //     height: 49,
+        //     color: primary,
+        //   ),
+        ...provDash.contrationsChart.map(
+          (i) => Container(
+            width: i.cantidad / provDash.totalContration * widthMax,
+            height: 49,
+            color: i.nombre == 'Fijo'
+                ? primary
+                : i.nombre == 'Reemplazo'
+                    ? success
+                    : neutral,
+          ),
         ),
-        Container(
-          width: widthMax * 0.3,
-          height: 49,
-          color: success,
-        ),
-        Container(
-          width: widthMax * 0.2,
-          height: 49,
-          color: neutral,
-        ),
+        // Container(
+        //   width: widthMax * 0.5,
+        //   height: 49,
+        //   color: primary,
+        // ),
+        // Container(
+        //   width: widthMax * 0.3,
+        //   height: 49,
+        //   color: success,
+        // ),
+        // Container(
+        //   width: widthMax * 0.2,
+        //   height: 49,
+        //   color: neutral,
+        // ),
       ],
     );
   }

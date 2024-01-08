@@ -1,6 +1,8 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:marcacion_admin/src/common/const/const.dart';
+import 'package:marcacion_admin/src/modules/dashboard/viewmodel/dashboard_provider.dart';
+import 'package:provider/provider.dart';
 
 class PieChartGenderWidget extends StatefulWidget {
   const PieChartGenderWidget({super.key});
@@ -14,6 +16,7 @@ class PieChart2State extends State {
 
   @override
   Widget build(BuildContext context) {
+    var provDash = Provider.of<DashboardProvider>(context);
     return Column(
       children: [
         Container(
@@ -35,30 +38,29 @@ class PieChart2State extends State {
                 alignment: Alignment.center,
                 child: AspectRatio(
                   aspectRatio: 1.3,
-                  child: Expanded(
-                    child: PieChart(
-                      PieChartData(
-                  pieTouchData: PieTouchData(
-                    touchCallback: (FlTouchEvent event, pieTouchResponse) {
-                      setState(() {
-                        if (!event.isInterestedForInteractions ||
-                            pieTouchResponse == null ||
-                            pieTouchResponse.touchedSection == null) {
-                          touchedIndex = -1;
-                          return;
-                        }
-                        touchedIndex = pieTouchResponse
-                            .touchedSection!.touchedSectionIndex;
-                      });
-                    },
-                  ),
-                        borderData: FlBorderData(
-                          show: false,
-                        ),
-                        sectionsSpace: 0,
-                        centerSpaceRadius: 60,
-                        sections: showingSections(),
+                  child: PieChart(
+                    PieChartData(
+                      pieTouchData: PieTouchData(
+                        touchCallback: (FlTouchEvent event, pieTouchResponse) {
+                          setState(() {
+                            if (!event.isInterestedForInteractions ||
+                                pieTouchResponse == null ||
+                                pieTouchResponse.touchedSection == null) {
+                              touchedIndex = -1;
+                              return;
+                            }
+                            touchedIndex = pieTouchResponse
+                                .touchedSection!.touchedSectionIndex;
+                          });
+                        },
                       ),
+                      borderData: FlBorderData(
+                        show: false,
+                      ),
+                      sectionsSpace: 0,
+                      centerSpaceRadius: 60,
+                      sections: showingSections(
+                          provDash.gendersChart, provDash.totalGender),
                     ),
                   ),
                 ),
@@ -69,18 +71,18 @@ class PieChart2State extends State {
                   alignment: Alignment.center,
                   width: 100,
                   height: 70,
-                  child: const Column(
+                  child: Column(
                     children: [
                       Text(
-                        "250",
-                        style: TextStyle(
+                        provDash.totalGender.toString(),
+                        style: const TextStyle(
                           fontSize: 24,
                           color: Color(0XFF313945),
                           fontWeight: FontWeight.bold,
                         ),
                         textAlign: TextAlign.center,
                       ),
-                      Text(
+                      const Text(
                         "Empleados",
                         style: TextStyle(
                           fontSize: 18,
@@ -96,56 +98,39 @@ class PieChart2State extends State {
             ],
           ),
         ),
-        const ItemGender(
-          color: success,
-          title: 'Mujeres',
-        ),
-        const SizedBox(height: 5),
-        const ItemGender(
-          color: primary,
-          title: 'Hombres',
-        ),
+        for (var item in provDash.gendersChart)
+          ItemGender(
+            color: item.nombre == 'Masculino' ? primary : success,
+            title: item.nombre,
+          ),
+        // const ItemGender(
+        //   color: primary,
+        //   title: 'Hombres',
+        // ),
         const SizedBox(height: 70),
       ],
     );
   }
 
-  List<PieChartSectionData> showingSections() {
-    return List.generate(2, (i) {
+  List<PieChartSectionData> showingSections(gendersChart, total) {
+    return List.generate(gendersChart.length, (i) {
+      var item = gendersChart[i];
       final isTouched = i == touchedIndex;
       final fontSize = isTouched ? 25.0 : 16.0;
       final radius = isTouched ? 60.0 : 50.0;
       const shadows = [Shadow(color: Colors.black, blurRadius: 2)];
-      switch (i) {
-        case 0:
-          return PieChartSectionData(
-            color: success,
-            value: 50,
-            title: '125',
-            radius: radius,
-            titleStyle: TextStyle(
-              fontSize: fontSize,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-              shadows: shadows,
-            ),
-          );
-        case 1:
-          return PieChartSectionData(
-            color: primary,
-            value: 50,
-            title: '125',
-            radius: radius,
-            titleStyle: TextStyle(
-              fontSize: fontSize,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-              shadows: shadows,
-            ),
-          );
-        default:
-          throw Error();
-      }
+      return PieChartSectionData(
+        color: item.nombre == 'Masculino' ? primary : success,
+        value: (item.cantidad / total) * 100,
+        title: item.cantidad.toString(),
+        radius: radius,
+        titleStyle: TextStyle(
+          fontSize: fontSize,
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
+          shadows: shadows,
+        ),
+      );
     });
   }
 }
@@ -161,7 +146,8 @@ class ItemGender extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return Container(
+      margin: const EdgeInsets.only(bottom: 5),
       width: 100,
       height: 25,
       child: Row(

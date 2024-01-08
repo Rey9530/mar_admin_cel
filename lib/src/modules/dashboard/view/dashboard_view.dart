@@ -5,9 +5,12 @@ import 'package:marcacion_admin/src/common/helpers/helpers.dart';
 import 'package:marcacion_admin/src/common/models/dropdown_button_data_model.dart';
 import 'package:marcacion_admin/src/common/services/services.dart';
 import 'package:marcacion_admin/src/common/widgets/widgets.dart';
+import 'package:marcacion_admin/src/modules/contract/viewmodel/contracts_provider.dart';
 import 'package:marcacion_admin/src/modules/dashboard/view/widgets/bar_graph_widget.dart';
 import 'package:marcacion_admin/src/modules/dashboard/view/widgets/chat_status_widget.dart';
 import 'package:marcacion_admin/src/modules/dashboard/view/widgets/pie_chart_widget.dart';
+import 'package:marcacion_admin/src/modules/dashboard/viewmodel/dashboard_provider.dart';
+import 'package:provider/provider.dart';
 
 class DashboardView extends StatelessWidget {
   const DashboardView({super.key});
@@ -166,7 +169,7 @@ class Employees1Widget extends StatelessWidget {
     return Container(
       width: 350,
       height: 350,
-      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10), 
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 50),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -292,27 +295,54 @@ class CardUserCustomerWidget extends StatelessWidget {
                     borderRadius: BorderRadius.circular(16),
                   ),
                   height: 55,
-                  child: SelectCompaniesWidget(
-                    controller: TextEditingController(),
-                    title: '',
-                    onChange: (val) {},
-                    selected: DropdownButtonData(
-                      id: "0",
-                      title: "Selecciona una opción",
-                    ),
-                    items: [
-                      DropdownButtonData(
-                        id: "1",
-                        title: "Empresa 1",
-                      ),
-                    ],
-                  ),
+                  child: const _SelectContratWidget(),
                 )
               ],
             ),
           )
         ],
       ),
+    );
+  }
+}
+
+class _SelectContratWidget extends StatelessWidget {
+  const _SelectContratWidget();
+
+  @override
+  Widget build(BuildContext context) {
+    var provider = Provider.of<ContractsProvider>(context, listen: false);
+    var provDash = Provider.of<DashboardProvider>(context, listen: false);
+    return FutureBuilder(
+      future: provider.getContracts(),
+      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const SizedBox(
+            width: 50,
+            height: 50,
+            child: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        }
+        return SelectCompaniesWidget(
+          controller: provider.companyFilter,
+          title: '',
+          onChange: (val) {
+            provDash.getChartsData(val.id);
+          },
+          textSelected: 'Seleccione una opcion por favor',
+          items: [
+            if (snapshot.data != null)
+              ...provider.contracts.map(
+                (e) => DropdownButtonData(
+                  id: e.ctrCodigo,
+                  title: e.ctrName,
+                ),
+              )
+          ],
+        );
+      },
     );
   }
 }
