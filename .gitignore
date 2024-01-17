@@ -121,6 +121,7 @@ dmypy.json
 # Cython debug symbols
 cython_debug/
 face_/
+dev/
 videos/
 
 output.avi
