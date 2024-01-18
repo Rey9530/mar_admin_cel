@@ -8,6 +8,7 @@ app = FastAPI()
 
 def es_rostro_suficientemente_grande(top, right, bottom, left, umbral_area):
     area = (bottom - top) * (right - left)
+    print("area")
     print(area)
     return area > umbral_area
 
@@ -26,7 +27,7 @@ def cargar_imagenes_conocidas():
     face_knows_globales = []
     face_knows_name_globales = []
     # ... (tu código para cargar imágenes y codificaciones)
-    
+    print("Cargando imágenes conocidas...")
     peopleList = os.listdir(dataPath)
     for nameDir in peopleList:
         if ".png" not in nameDir :
@@ -35,7 +36,9 @@ def cargar_imagenes_conocidas():
         known_i = face_recognition.load_image_file(personPath)
         face_locations = face_recognition.face_locations(known_i)
         for face_location in face_locations:
+            print("Procesando...", nameDir)
             img_encoding = face_recognition.face_encodings(known_i, [face_location])[0]
+            print("Procesado...", nameDir)
             face_knows_globales.append(img_encoding)
             face_knows_name_globales.append(nameDir)
     return {"status": "ok"}
@@ -46,15 +49,17 @@ cargar_imagenes_conocidas()
 
 @app.get("/{user_code}") 
 def reconocer(user_code: str):
+    print("Reconociendo...")
     file_to_scan = os.path.join(dataPathScan, f"{user_code}.png")
     if not os.path.isfile(file_to_scan):
         return {"persona": "no encontrada"}
-
+    
     unknown_image = face_recognition.load_image_file(file_to_scan)
     unknown_encoding = face_recognition.face_encodings(unknown_image)[0]
-
+    print("Comparando...")
     # Usar las variables globales
     results = face_recognition.compare_faces(face_knows_globales, unknown_encoding, 0.4)
+    print("Resultados:")
     try:
         indice = results.index(True)
         return {"persona": face_knows_name_globales[indice]}
