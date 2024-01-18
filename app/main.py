@@ -24,6 +24,9 @@ face_knows_name_globales = []
 # Funciones para cargar imágenes y verificar tamaño del rostro
 @app.get("/reload/photos") 
 def cargar_imagenes_conocidas():
+    global face_knows_globales
+    global face_knows_name_globales 
+    
     face_knows_globales = []
     face_knows_name_globales = []
     # ... (tu código para cargar imágenes y codificaciones)
@@ -53,7 +56,7 @@ def reconocer(user_code: str):
     file_to_scan = os.path.join(dataPathScan, f"{user_code}.png")
     if not os.path.isfile(file_to_scan):
         return {"persona": "no encontrada"}
-    
+    print(len(face_knows_globales))
     unknown_image = face_recognition.load_image_file(file_to_scan)
     unknown_encoding = face_recognition.face_encodings(unknown_image)[0]
     print("Comparando...")
