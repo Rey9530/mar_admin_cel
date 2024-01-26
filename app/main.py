@@ -6,6 +6,12 @@ from fastapi import FastAPI
 app = FastAPI()
 
 
+
+def es_imagen_valida(nombre_archivo):
+    extension = nombre_archivo.split('.')[-1].lower()
+    print(extension)
+    return extension not in ['png', 'jpg', 'JPG']
+
 def es_rostro_suficientemente_grande(top, right, bottom, left, umbral_area):
     area = (bottom - top) * (right - left)
     print("area")
@@ -33,8 +39,11 @@ def cargar_imagenes_conocidas():
     print("Cargando imágenes conocidas...")
     peopleList = os.listdir(dataPath)
     for nameDir in peopleList:
-        if ".png" not in nameDir :
+        print("Archivo: ", nameDir)
+        print("Resultado: ",es_imagen_valida(nameDir))
+        if es_imagen_valida(nameDir) :
             continue
+        print("Procesando: ", nameDir)
         personPath = os.path.join(dataPath, nameDir)
         known_i = face_recognition.load_image_file(personPath)
         face_locations = face_recognition.face_locations(known_i)
@@ -42,18 +51,35 @@ def cargar_imagenes_conocidas():
             print("Procesando...", nameDir)
             img_encoding = face_recognition.face_encodings(known_i, [face_location])[0]
             print("Procesado...", nameDir)
-            face_knows_globales.append(img_encoding)
-            face_knows_name_globales.append(nameDir)
+            face_knows_globales.extend(img_encoding)
+            face_knows_name_globales.extend(nameDir)
     return {"status": "ok"}
 
-# Carga inicial de las imágenes conocidas
-cargar_imagenes_conocidas()
+@app.get("/load/photos/{image_name}") 
+def cargar_imagenes(image_name: str):
+    global face_knows_globales
+    global face_knows_name_globales 
+    nameDir = f"{image_name}"
+    print("Reconociendo..."+nameDir)
+    print(len(face_knows_globales))
+    if es_imagen_valida(nameDir) :
+        print("No se reconoce como valida: "+nameDir)
+        {"status": "ok"}
+    file_to_scan = os.path.join(dataPath, f"{nameDir}")
+    known_i = face_recognition.load_image_file(file_to_scan)
+    face_locations = face_recognition.face_locations(known_i)
+    for face_location in face_locations:
+        img_encoding = face_recognition.face_encodings(known_i, [face_location])[0]
+        face_knows_globales.extend(img_encoding)
+        face_knows_name_globales.extend(nameDir) 
+    print(len(face_knows_globales))
+    return {"status": len(face_knows_globales)}
 
 
 @app.get("/{user_code}") 
 def reconocer(user_code: str):
-    print("Reconociendo...")
-    file_to_scan = os.path.join(dataPathScan, f"{user_code}.png")
+    print("Reconociendo..."+f"{user_code}")
+    file_to_scan = os.path.join(dataPathScan, f"{user_code}")
     if not os.path.isfile(file_to_scan):
         return {"persona": "no encontrada"}
     print(len(face_knows_globales))
@@ -69,3 +95,6 @@ def reconocer(user_code: str):
     except ValueError:
         return {"persona": "no encontrada"} 
     
+
+# Carga inicial de las imágenes conocidas
+cargar_imagenes_conocidas()
